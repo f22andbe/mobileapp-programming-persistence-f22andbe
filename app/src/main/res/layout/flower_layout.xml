@@ -3,14 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="5dp">
 
     <!-- First Row -->
     <TextView
         android:id="@+id/namelabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView 1"
+        android:text="Name: "
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/showname"
@@ -35,7 +36,7 @@
         android:id="@+id/specieslabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView 3"
+        android:text="Species: "
         app:layout_constraintTop_toBottomOf="@id/namelabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/showspecies"
@@ -60,7 +61,7 @@
         android:id="@+id/genuslabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView 5"
+        android:text="Genus: "
         app:layout_constraintTop_toBottomOf="@id/specieslabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/showgenus"
