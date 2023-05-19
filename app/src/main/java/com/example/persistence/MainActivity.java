@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +22,14 @@ public class MainActivity extends AppCompatActivity {
     EditText editFlowerName;
     EditText editFlowerSpecies;
     EditText editFlowerGenus;
+    TextView displayDataView;
     Button readButton;
     Button writeButton;
     RecyclerView recyclerView;
     FlowerViewAdapter flowerAdapter;
     List<Flower> flowerList;
     FlowerTableQuery flowerQuery;
-    FlowerTableInsert flowerInsert;
+    //FlowerTableInsert flowerInsert;
 
 
     @Override
@@ -40,24 +42,31 @@ public class MainActivity extends AppCompatActivity {
         editFlowerGenus = findViewById(R.id.edit_flowergenus);
         readButton = findViewById(R.id.readbutton);
         writeButton = findViewById(R.id.writebutton);
-        recyclerView = findViewById(R.id.recyclerview);
+        displayDataView = findViewById(R.id.displaydata_textview);
+        //recyclerView = findViewById(R.id.recyclerview);
 
         flowerList = new ArrayList<Flower>();
         flowerQuery = new FlowerTableQuery(this, flowerList);
-        flowerInsert = new FlowerTableInsert(this);
+        //flowerInsert = new FlowerTableInsert(this);
 
-        /* Set up adapter */
+        /* Set up adapter
+        recyclerView.setAdapter(flowerAdapter); //part of recyclerview design
         flowerAdapter = new FlowerViewAdapter(flowerList);
-        recyclerView.setAdapter(flowerAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this)); */
     }
 
     /* Fetch contents of database and display in a view */
     public void onClickRead(View v) {
         //Log.d("onClickRead_top:", flowerList.toString());
+        StringBuilder data = new StringBuilder();
         flowerList.clear();
         flowerQuery.selectFlowers();
-        flowerAdapter.notifyDataSetChanged();
+        for(int i=0; i < flowerList.size(); i++) {
+            data.append(flowerList.get(i).toString());
+        }
+        displayDataView.setText(data);
+
+        //flowerAdapter.notifyDataSetChanged();
         //Log.d("onClickRead:", flowerList.toString());
     }
 
@@ -67,12 +76,13 @@ public class MainActivity extends AppCompatActivity {
         String name = editFlowerName.getText().toString();
         String species = editFlowerSpecies.getText().toString();
         String genus = editFlowerGenus.getText().toString();
+
         long ret;
 
         //Log.d("onClickWrite:", "name = " + name + " species = " + species + " genus = " + genus);
 
         /* insert data in database */
-        ret = flowerInsert.insertFlowerData(name, species, genus);
+        ret = flowerQuery.insertFlowerData(name, species, genus);
 
         /*clear edit fields */
         if(ret == -1) {
@@ -82,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         }
         editFlowerSpecies.setText("");
         editFlowerGenus.setText("");
-        flowerAdapter.notifyDataSetChanged();
+        //flowerAdapter.notifyDataSetChanged(); //part of recyclerview design
     }
 
 
@@ -112,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d("onOptionItemSelected","clear view");
             /* clear the view */
             flowerList.clear();
-            flowerAdapter.notifyDataSetChanged();
+            displayDataView.setText("");
+            //flowerAdapter.notifyDataSetChanged(); //part of recyclerview design
             return true;
         }
 
@@ -125,11 +136,15 @@ public class MainActivity extends AppCompatActivity {
         /* Would have been a cleaner design to just get information from
          * showDialog about which button was pressed and take action accordingly
          * but I have yet to figure out how to do that so, we register these objects
-         * with the dialog and do the work in the click listener.
-         */
+         * with the dialog and do the work in the click listener. */
+
+
         dialogFragment.setFlowerList(flowerList);
         dialogFragment.setFlowerQuery(flowerQuery);
-        dialogFragment.setAdapter(flowerAdapter);
+        dialogFragment.setDataDisplayView(displayDataView);
+
+        /* This is part of the recyclerview design I originally used
+        dialogFragment.setAdapter(flowerAdapter); */
         dialogFragment.show(getSupportFragmentManager(), "ConfirmDialog");
     }
 }

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +17,9 @@ public class ConfirmDialog extends DialogFragment {
 
     List<Flower> flowerList;
     FlowerTableQuery flowerQuery;
-    FlowerViewAdapter flowerAdapter;
+    TextView dataDisplayView;
+    //FlowerViewAdapter flowerAdapter;
+
 
     @NonNull
     @Override
@@ -30,7 +33,7 @@ public class ConfirmDialog extends DialogFragment {
                         // Handle positive button click
                         flowerQuery.deleteAllFlowerRows();
                         flowerList.clear();
-                        flowerAdapter.notifyDataSetChanged();
+                        dataDisplayView.setText("");
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -50,8 +53,8 @@ public class ConfirmDialog extends DialogFragment {
         this.flowerQuery = flowerQuery;
     }
 
-    public void setAdapter(FlowerViewAdapter flowerAdapter) {
-        this.flowerAdapter = flowerAdapter;
+    public void setDataDisplayView(TextView dataDisplayView) {
+        this.dataDisplayView = dataDisplayView;
     }
 }
 

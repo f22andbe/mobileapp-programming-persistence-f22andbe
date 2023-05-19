@@ -38,10 +38,6 @@ public class Flower {
 
     @Override
     public String toString() {
-        return "Flower{" +
-                "name='" + name + '\'' +
-                ", species='" + species + '\'' +
-                ", genus='" + genus + '\'' +
-                '}';
+        return  "name = " + name + "\n" + "species = " + species + "\n" + "genus = " + genus + "\n\n";
     }
 }
