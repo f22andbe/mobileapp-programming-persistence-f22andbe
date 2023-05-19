@@ -41,7 +41,6 @@ public class FlowerViewAdapter extends RecyclerView.Adapter<FlowerViewAdapter.Fl
 
     @Override
     public int getItemCount() {
-        Log.d("getItemCount:", "size = " + flowerList.size());
         return flowerList.size();
     }
 
