@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(flowerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
-    
+
     /* Fetch contents of database and display in a view */
     public void onClickRead(View v) {
         //Log.d("onClickRead_top:", flowerList.toString());

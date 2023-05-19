@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -56,18 +57,13 @@
             android:layout_height="wrap_content"
             android:text="Write"
             android:onClick="onClickWrite"/>
-        <Button
-            android:id="@+id/emptydatabasebutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Empty database"
-            android:onClick="onClickEmpty"/>
-
     </LinearLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
 
 </LinearLayout>

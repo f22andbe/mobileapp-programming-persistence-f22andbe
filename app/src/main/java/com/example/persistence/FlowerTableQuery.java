@@ -64,7 +64,7 @@ public class FlowerTableQuery extends SQLiteOpenHelper {
 
     }
 
-    
+
     public void deleteAllFlowerRows() {
         SQLiteDatabase db = getWritableDatabase();
 
