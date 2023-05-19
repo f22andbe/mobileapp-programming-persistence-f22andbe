@@ -2,6 +2,8 @@ package com.example.persistence;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.database.sqlite.SQLiteConstraintException;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         flowerList = new ArrayList<Flower>();
         flowerQuery = new FlowerTableQuery(this, flowerList);
+
         //flowerInsert = new FlowerTableInsert(this);
 
         /* Set up adapter
@@ -65,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
             data.append(flowerList.get(i).toString());
         }
         displayDataView.setText(data);
-
         //flowerAdapter.notifyDataSetChanged();
         //Log.d("onClickRead:", flowerList.toString());
     }
@@ -82,18 +84,29 @@ public class MainActivity extends AppCompatActivity {
         //Log.d("onClickWrite:", "name = " + name + " species = " + species + " genus = " + genus);
 
         /* insert data in database */
-        ret = flowerQuery.insertFlowerData(name, species, genus);
+        try {
+            flowerQuery.insertFlowerData(name, species, genus);
+        }catch (SQLiteConstraintException e){
+            editFlowerName.setText("Entries have to be unique");
+            editFlowerSpecies.setText("");
+            editFlowerGenus.setText("");
+            return;
+        }
 
         /*clear edit fields */
-        if(ret == -1) {
-            editFlowerName.setText("Problem writing to database");
-        }else {
-            editFlowerName.setText("");
-        }
+        editFlowerName.setText("");
         editFlowerSpecies.setText("");
         editFlowerGenus.setText("");
         //flowerAdapter.notifyDataSetChanged(); //part of recyclerview design
     }
+
+    /*public void onClickDeleteTable(View v) {
+        flowerQuery.deleteFlowerTable();
+    }
+
+    public void onClickCreateTable(View v) {
+        flowerQuery.createFlowerTable();
+    }*/
 
 
 
@@ -121,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_empty_view) {
             Log.d("onOptionItemSelected","clear view");
             /* clear the view */
+            Log.d("create table string ", Tables.SQL_CREATE_TABLE_FLOWERS);
             flowerList.clear();
             displayDataView.setText("");
             //flowerAdapter.notifyDataSetChanged(); //part of recyclerview design

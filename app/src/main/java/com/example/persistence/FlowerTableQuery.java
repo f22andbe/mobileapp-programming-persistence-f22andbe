@@ -3,7 +3,10 @@ package com.example.persistence;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -14,6 +17,7 @@ public class FlowerTableQuery extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "flowers.db";
     private static final int DATABASE_VERSION = 1;
+
     private static final String TABLE_NAME = "flowers";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_SPECIES = "species";
@@ -28,8 +32,10 @@ public class FlowerTableQuery extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create the "flowers" table
-        String createTableQuery = "CREATE TABLE flowers (name VARCHAR, species VARCHAR, genus VARCHAR)";
-        db.execSQL(createTableQuery);
+        //String createTableQuery = "CREATE TABLE flowers (name VARCHAR, species VARCHAR, genus VARCHAR)";
+        //db.execSQL(createTableQuery);
+
+        db.execSQL(Tables.SQL_CREATE_TABLE_FLOWERS);
     }
 
     @Override
@@ -46,8 +52,8 @@ public class FlowerTableQuery extends SQLiteOpenHelper {
 
         try {
             // Select the desired fields from the "flowers" table
-            String[] columns = {"name", "species", "genus"};
-            cursor = db.query("flowers", columns, null, null, null, null, null);
+            String[] columns = {Tables.FlowerTable.COLUMN_NAME_NAME, Tables.FlowerTable.COLUMN_NAME_SPECIES, Tables.FlowerTable.COLUMN_NAME_GENUS};
+            cursor = db.query(Tables.FlowerTable.TABLE_NAME, columns, null, null, null, null, null);
 
             // Process the result set
             while (cursor.moveToNext()) {
@@ -69,21 +75,23 @@ public class FlowerTableQuery extends SQLiteOpenHelper {
 
     }
 
-    public long insertFlowerData(String name, String species, String genus) {
+    public long insertFlowerData(String name, String species, String genus) throws SQLiteConstraintException {
         SQLiteDatabase db = getWritableDatabase();
         long retvalue;
-        try {
+
             ContentValues values = new ContentValues();
-            values.put(COLUMN_NAME, name);
-            values.put(COLUMN_SPECIES, species);
-            values.put(COLUMN_GENUS, genus);
+            values.put(Tables.FlowerTable.COLUMN_NAME_NAME, name);
+            values.put(Tables.FlowerTable.COLUMN_NAME_SPECIES, species);
+            values.put(Tables.FlowerTable.COLUMN_NAME_GENUS, genus);
+
+
 
             // Insert data into the "flowers" table
-            retvalue = db.insert(TABLE_NAME, null, values);
-        } finally {
+            retvalue = db.insertOrThrow(Tables.FlowerTable.TABLE_NAME, null, values);
+
             // Close the database
-            db.close();
-        }
+
+
         return retvalue;
     }
 
@@ -93,12 +101,23 @@ public class FlowerTableQuery extends SQLiteOpenHelper {
 
         try {
             // Delete all rows from the "flowers" table
-            db.delete("flowers", null, null);
+            db.delete(Tables.FlowerTable.TABLE_NAME, null, null);
+            //db.delete("flowers", null, null);
         } finally {
             // Close the database
             db.close();
         }
     }
+
+    /*public void deleteFlowerTable() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL(Tables.SQL_DELETE_TABLE_FLOWERS);
+    }
+
+    public void createFlowerTable() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL(Tables.SQL_CREATE_TABLE_FLOWERS);
+    }*/
 
 }
 
