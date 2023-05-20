@@ -73,12 +73,12 @@ public class MainActivity extends AppCompatActivity {
             flowerQuery.selectFlowers(); //query database
         }catch(SQLiteAccessPermException e) {
             editFlowerName.setText("You don't have permission to read the database");
-        }catch(SQLiteCantOpenDatabaseException e) {
-            editFlowerName.setText("Can't open the database");
-        }finally {
             editFlowerSpecies.setText("");
             editFlowerGenus.setText("");
-            return;
+        }catch(SQLiteCantOpenDatabaseException e) {
+            editFlowerName.setText("Can't open the database");
+            editFlowerSpecies.setText("");
+            editFlowerGenus.setText("");
         }
 
         /* take the data received and build the string
