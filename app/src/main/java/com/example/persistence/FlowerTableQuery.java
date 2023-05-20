@@ -18,10 +18,6 @@ public class FlowerTableQuery extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "flowers.db";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String TABLE_NAME = "flowers";
-    private static final String COLUMN_NAME = "name";
-    private static final String COLUMN_SPECIES = "species";
-    private static final String COLUMN_GENUS = "genus";
     private List<Flower> flowerList;
 
     public FlowerTableQuery(Context context, List<Flower> flowerList) {
@@ -60,7 +56,7 @@ public class FlowerTableQuery extends SQLiteOpenHelper {
                 name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 species = cursor.getString(cursor.getColumnIndexOrThrow("species"));
                 genus = cursor.getString(cursor.getColumnIndexOrThrow("genus"));
-                Log.d("selectFlowers:", "name = " + name + " species = " + species + " genus = " + genus);
+                //Log.d("selectFlowers:", "name = " + name + " species = " + species + " genus = " + genus);
                 flowerList.add(new Flower(name, species, genus));
 
 
@@ -75,24 +71,17 @@ public class FlowerTableQuery extends SQLiteOpenHelper {
 
     }
 
-    public long insertFlowerData(String name, String species, String genus) throws SQLiteConstraintException {
+    public void insertFlowerData(String name, String species, String genus) throws SQLiteConstraintException {
         SQLiteDatabase db = getWritableDatabase();
-        long retvalue;
 
             ContentValues values = new ContentValues();
             values.put(Tables.FlowerTable.COLUMN_NAME_NAME, name);
             values.put(Tables.FlowerTable.COLUMN_NAME_SPECIES, species);
             values.put(Tables.FlowerTable.COLUMN_NAME_GENUS, genus);
 
-
-
             // Insert data into the "flowers" table
-            retvalue = db.insertOrThrow(Tables.FlowerTable.TABLE_NAME, null, values);
+            db.insertOrThrow(Tables.FlowerTable.TABLE_NAME, null, values);
 
-            // Close the database
-
-
-        return retvalue;
     }
 
 
