@@ -2,6 +2,8 @@ package com.example.persistence;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.database.sqlite.SQLiteAccessPermException;
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
@@ -61,9 +63,27 @@ public class MainActivity extends AppCompatActivity {
     /* Fetch contents of database and display in a view */
     public void onClickRead(View v) {
         //Log.d("onClickRead_top:", flowerList.toString());
+
+        /* we need to append to the string so we use
+         *  the mutable string type StringBuilder
+         */
         StringBuilder data = new StringBuilder();
         flowerList.clear();
-        flowerQuery.selectFlowers();
+        try {
+            flowerQuery.selectFlowers(); //query database
+        }catch(SQLiteAccessPermException e) {
+            editFlowerName.setText("You don't have permission to read the database");
+        }catch(SQLiteCantOpenDatabaseException e) {
+            editFlowerName.setText("Can't open the database");
+        }finally {
+            editFlowerSpecies.setText("");
+            editFlowerGenus.setText("");
+            return;
+        }
+
+        /* take the data received and build the string
+         * to be displayed in the TextView
+         */
         for(int i=0; i < flowerList.size(); i++) {
             data.append(flowerList.get(i).toString());
         }
@@ -79,11 +99,11 @@ public class MainActivity extends AppCompatActivity {
         String species = editFlowerSpecies.getText().toString();
         String genus = editFlowerGenus.getText().toString();
 
-        long ret;
 
-        //Log.d("onClickWrite:", "name = " + name + " species = " + species + " genus = " + genus);
-
-        /* insert data in database */
+        /* insert data in database, if an entry is identical to an existing entry
+         *  a unique constraint will be violated and insertFlowerData() will throw
+         *  an SQLiteConstraintException, we catch that and displa a suitable message
+         */
         try {
             flowerQuery.insertFlowerData(name, species, genus);
         }catch (SQLiteConstraintException e){
@@ -108,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         flowerQuery.createFlowerTable();
     }*/
 
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -133,9 +153,8 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_empty_view) {
             Log.d("onOptionItemSelected","clear view");
             /* clear the view */
-            Log.d("create table string ", Tables.SQL_CREATE_TABLE_FLOWERS);
-            flowerList.clear();
-            displayDataView.setText("");
+            flowerList.clear(); // empty flowerList
+            displayDataView.setText(""); // set the TextView to display empty string
             //flowerAdapter.notifyDataSetChanged(); //part of recyclerview design
             return true;
         }
